@@ -34,13 +34,13 @@
 function getCard(cardValue, cardSuite, cardIndex) {
   let card;
   let cardName = `${cardValue}Of${cardSuite}`;
-  let currentCardValue = cardIndex; // make sure knight, queen and king gets cardvalue = 10
+  let currentCardValue = cardIndex < 11 ? cardIndex : 10; // value = 10 if card is knight, queen or king
 
   card = {
     value: currentCardValue,
     suite: cardSuite,
     img: `${cardName}.png`,
-    name: `${cardValue} Of ${cardSuite}`,
+    name: `${cardValue} of ${cardSuite}`,
   };
 
   return card;
@@ -106,10 +106,19 @@ function getHandValue(hand) {
   let value = 0;
   for (const currentCard of hand) {
     card = currentCard[0];
-    console.log(card);
-    value += card.value;
+    value += card.value === 1 && value + 11 < 21 ? 11 : card.value;
   }
   return value;
+}
+
+/**Format and log the cards that are in the hand
+ *
+ */
+function logHand(hand) {
+  for (const card of hand) {
+    console.log(card[0].name);
+  }
+  console.log(`Value: ${getHandValue(hand)}`);
 }
 
 // console.log(getCard("ace", "heart"));
@@ -118,18 +127,18 @@ let game = true;
 
 let player = {
   hand: [drawCard(deck), drawCard(deck)],
-  hasAce: false,
 };
 
 let dealer = {
   hand: [drawCard(deck), drawCard(deck)],
-  hasAce: false,
 };
 
 while (game) {
   // Display dealer score
-  console.log(getHandValue(player.hand));
-  console.log(getHandValue(dealer.hand));
+  console.log("Player");
+  logHand(player.hand);
+  console.log("Dealer");
+  logHand(dealer.hand);
   game = false;
   // Display player score
   // Spelare och dealer drar två kort var
