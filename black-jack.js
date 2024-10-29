@@ -121,11 +121,30 @@ function logHand(hand) {
   console.log(`Value: ${getHandValue(hand)}`);
 }
 
+function hasBlackJack(hand) {
+  return getHandValue(hand) === 21;
+}
+
+function handStatus(hand) {
+  let handValue = getHandValue(hand);
+  if (handValue === 21) {
+    return "hasBlackJack";
+  } else if (handValue > 21) {
+    return "bust";
+  } else {
+    return "alive";
+  }
+}
+
+// *======================= GAME STARTS ========================================
 // console.log(getCard("ace", "heart"));
 let deck = shuffleDeck(getDeck());
 let game = true;
-let playerDrawCard = false;
+let playerDrawsCard = false;
+let playerLost = false;
+let dealerLost = false;
 
+// * Deals two card each to player and dealer
 let player = {
   hand: [drawCard(deck), drawCard(deck)],
 };
@@ -142,20 +161,36 @@ while (game) {
   console.log("Dealer");
   logHand(dealer.hand);
 
+  if (getHandValue(dealer.hand) > 21) {
+    dealerLost = true;
+    break;
+  }
+
   // * Vill spelaren dra ett till kort?
-  playerDrawCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
-  if (playerDrawCard) {
+  playerDrawsCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
+
+  if (playerDrawsCard) {
     player.hand.push(drawCard(deck));
+
+    // TODO Player förlorar om handens värde > 21
+    if (getHandValue(player.hand) > 21) {
+      playerLost = true;
+      break;
+    }
   } else {
     // När spelaren tackar nej till kort, drar dealern upp kort medans värdet är < 16
     while (getHandValue(dealer.hand) < 16) {
       console.log(getHandValue(dealer.hand));
       dealer.hand.push(drawCard(deck));
+      // TODO Dealer förlorar om handens värde > 21
     }
   }
   // Om spelaren drar kort ska dealern oxå dra kort om dealers hand är < 16
   if (getHandValue(dealer.hand) < 16) {
     dealer.hand.push(drawCard(deck));
+    // TODO Dealer förlorar om handens värde > 21
+  } else {
+    break;
   }
 
   // * Dealer drar kort om totala värde < 16
@@ -165,3 +200,15 @@ while (game) {
   // Delaer drar ett kort om dens poäng är under 16
   // game = false;
 }
+
+console.log(`Player lost = ${playerLost}`);
+console.log(`Dealer lost = ${dealerLost}`);
+
+/*
+ * if player lost player bet -= bet
+ * if dealer lost player keeps bet
+ * if tie below 19 player bet-=bet
+ * if tie above 19 player keeps bet
+ * if player blackjack and win bet += bet * 1.5
+ * if player win bet += bet
+ */
