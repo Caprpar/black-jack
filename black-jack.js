@@ -106,7 +106,7 @@ function getHandValue(hand) {
   let value = 0;
   for (const currentCard of hand) {
     card = currentCard[0];
-    value += card.value === 1 && value + 11 < 21 ? 11 : card.value;
+    value += card.value === 1 && value + 11 === 21 ? 11 : card.value;
   }
   return value;
 }
@@ -124,6 +124,7 @@ function logHand(hand) {
 // console.log(getCard("ace", "heart"));
 let deck = shuffleDeck(getDeck());
 let game = true;
+let playerDrawCard = false;
 
 let player = {
   hand: [drawCard(deck), drawCard(deck)],
@@ -135,13 +136,32 @@ let dealer = {
 
 while (game) {
   // Display dealer score
+  console.log("=========================");
   console.log("Player");
   logHand(player.hand);
   console.log("Dealer");
   logHand(dealer.hand);
-  game = false;
+
+  // * Vill spelaren dra ett till kort?
+  playerDrawCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
+  if (playerDrawCard) {
+    player.hand.push(drawCard(deck));
+  } else {
+    // När spelaren tackar nej till kort, drar dealern upp kort medans värdet är < 16
+    while (getHandValue(dealer.hand) < 16) {
+      console.log(getHandValue(dealer.hand));
+      dealer.hand.push(drawCard(deck));
+    }
+  }
+  // Om spelaren drar kort ska dealern oxå dra kort om dealers hand är < 16
+  if (getHandValue(dealer.hand) < 16) {
+    dealer.hand.push(drawCard(deck));
+  }
+
+  // * Dealer drar kort om totala värde < 16
   // Display player score
   // Spelare och dealer drar två kort var
   // Spelare väljer om den vill dra ett nytt kort
   // Delaer drar ett kort om dens poäng är under 16
+  // game = false;
 }
