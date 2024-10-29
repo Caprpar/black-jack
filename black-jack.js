@@ -147,10 +147,12 @@ let dealer = {
 while (game) {
   // Display dealer score
   displayBoard();
-  // TODO Automatiskt skippar frågan om dra kort ifall spelare får blackjack
 
-  // * Vill spelaren dra ett till kort?
-  playerDrawsCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
+  // Player choose to draw card if hand not blackjack
+  if (getHandValue(player.hand) !== 21) {
+    // * Vill spelaren dra ett till kort?
+    playerDrawsCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
+  }
 
   if (playerDrawsCard) {
     player.hand.push(drawCard(deck));
