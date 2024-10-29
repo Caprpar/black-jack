@@ -111,6 +111,14 @@ function getHandValue(hand) {
   return value;
 }
 
+function displayBoard() {
+  console.log("=========================");
+  console.log("Player");
+  logHand(player.hand);
+  console.log("Dealer");
+  logHand(dealer.hand);
+}
+
 /**Format and log the cards that are in the hand
  *
  */
@@ -121,28 +129,11 @@ function logHand(hand) {
   console.log(`Value: ${getHandValue(hand)}`);
 }
 
-function hasBlackJack(hand) {
-  return getHandValue(hand) === 21;
-}
-
-function handStatus(hand) {
-  let handValue = getHandValue(hand);
-  if (handValue === 21) {
-    return "hasBlackJack";
-  } else if (handValue > 21) {
-    return "bust";
-  } else {
-    return "alive";
-  }
-}
-
 // *======================= GAME STARTS ========================================
 // console.log(getCard("ace", "heart"));
 let deck = shuffleDeck(getDeck());
 let game = true;
 let playerDrawsCard = false;
-let playerLost = false;
-let dealerLost = false;
 
 // * Deals two card each to player and dealer
 let player = {
@@ -155,16 +146,8 @@ let dealer = {
 
 while (game) {
   // Display dealer score
-  console.log("=========================");
-  console.log("Player");
-  logHand(player.hand);
-  console.log("Dealer");
-  logHand(dealer.hand);
-
-  if (getHandValue(dealer.hand) > 21) {
-    dealerLost = true;
-    break;
-  }
+  displayBoard();
+  // TODO Automatiskt skippar frågan om dra kort ifall spelare får blackjack
 
   // * Vill spelaren dra ett till kort?
   playerDrawsCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
@@ -172,23 +155,18 @@ while (game) {
   if (playerDrawsCard) {
     player.hand.push(drawCard(deck));
 
-    // TODO Player förlorar om handens värde > 21
     if (getHandValue(player.hand) > 21) {
-      playerLost = true;
       break;
     }
   } else {
     // När spelaren tackar nej till kort, drar dealern upp kort medans värdet är < 16
     while (getHandValue(dealer.hand) < 16) {
-      console.log(getHandValue(dealer.hand));
       dealer.hand.push(drawCard(deck));
-      // TODO Dealer förlorar om handens värde > 21
     }
   }
   // Om spelaren drar kort ska dealern oxå dra kort om dealers hand är < 16
   if (getHandValue(dealer.hand) < 16) {
     dealer.hand.push(drawCard(deck));
-    // TODO Dealer förlorar om handens värde > 21
   } else {
     break;
   }
@@ -201,8 +179,30 @@ while (game) {
   // game = false;
 }
 
-console.log(`Player lost = ${playerLost}`);
-console.log(`Dealer lost = ${dealerLost}`);
+displayBoard();
+
+console.log(`Player value = ${getHandValue(player.hand)}`);
+console.log(`Dealer value = ${getHandValue(dealer.hand)}`);
+
+let playerHand = getHandValue(player.hand);
+let dealerHand = getHandValue(dealer.hand);
+
+if (playerHand > 21) {
+  console.log("lost");
+} else if (dealerHand > 21 || dealerHand < playerHand) {
+  console.log("win");
+} else if (playerHand === dealerHand && playerHand < 20) {
+  console.log("lost");
+} else if (playerHand === dealerHand && playerHand > 19) {
+  console.log("tie");
+} else if (playerHand === 21) {
+  console.log("BLACKJACK WIN!");
+} else {
+  console.log("Player hand | Dealer hand");
+  console.log(`${playerHand} > ${dealerHand} | ${playerHand > dealerHand}`);
+  console.log(`${playerHand} < ${dealerHand} | ${playerHand < dealerHand}`);
+  console.log(`${playerHand} === ${dealerHand} | ${playerHand === dealerHand}`);
+}
 
 /*
  * if player lost player bet -= bet
