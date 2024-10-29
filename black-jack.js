@@ -205,12 +205,3 @@ if (playerHand > 21) {
   console.log(`${playerHand} < ${dealerHand} | ${playerHand < dealerHand}`);
   console.log(`${playerHand} === ${dealerHand} | ${playerHand === dealerHand}`);
 }
-
-/*
- * if player lost player bet -= bet
- * if dealer lost player keeps bet
- * if tie below 19 player bet-=bet
- * if tie above 19 player keeps bet
- * if player blackjack and win bet += bet * 1.5
- * if player win bet += bet
- */
