@@ -45,7 +45,7 @@ function getCard(cardValue, cardSuite, cardIndex) {
 
   return card;
 }
-
+console.log();
 /**
  * Generates a deck with 52 cards
  */
@@ -101,12 +101,17 @@ function addToHand(hand, card) {
 
 /** Get value from current hand */
 function getHandValue(hand) {
-  // Addera alla kortens värden
-  // om något av korten är ess, kolla om totala värdet + 11 > 21, ge då ess värdet 1
   let value = 0;
+  // Change jack, queen and king value to 10 and push to handArray
   for (const currentCard of hand) {
-    card = currentCard[0];
-    value += card.value === 1 && value + 11 === 21 ? 11 : card.value;
+    let card = currentCard[0];
+    card.value = card.value > 10 ? 10 : card.value; // Sets J, Q & Kings value to 10
+    value += card.value === 1 ? 11 : card.value;
+  }
+
+  for (const currentCard of hand) {
+    let card = currentCard[0];
+    value -= card.value === 1 && value > 21 ? 10 : 0;
   }
   return value;
 }
