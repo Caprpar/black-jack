@@ -1,3 +1,9 @@
+$primary600: #317D37;
+$primary400: #61A967;
+$primary200: #A1F5A8;
+$dark: #2E2E2E;
+$red: #E33540;
+
 * {
   border: solid;
 }
@@ -13,10 +19,13 @@ body {
   align-items: center;
 }
 
+
 #table {
   width: 90vw;
   display: grid;
-  grid-template-areas: "empty-1 dealer deck" "empty-2 player empty-3";
+  grid-template-areas:
+  "empty-1 dealer deck"
+  "empty-2 player empty-3";
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   height: 90vh;
@@ -37,7 +46,7 @@ body {
 }
 
 #bet {
-  background-color: #61A967;
+  background-color: $primary400;
   height: 2rem;
   border: none;
 }
@@ -45,4 +54,4 @@ body {
 #balance {
   height: 100px;
   width: 100px;
-}/*# sourceMappingURL=style.css.map */
+}
