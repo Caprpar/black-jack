@@ -4,6 +4,20 @@ $primary200: #A1F5A8;
 $dark: #2E2E2E;
 $red: #E33540;
 
+* {
+  // border: solid $dark;
+}
+
+@font-face {
+  font-family: arvo;
+  src: url('/fonts/Arvo/Arvo-Bold.ttf') format('truetype');
+}
+p {
+  font-family: arvo;
+  font-size: 1.3em;
+  columns: $dark;
+}
+
 @mixin money-display {
   display: flex;
   flex-direction: column;
@@ -19,9 +33,6 @@ $red: #E33540;
   }
 }
 
-* {
-  border: solid;
-}
 
 body {
   display: flex;
@@ -41,10 +52,12 @@ body {
   grid-template-areas:
   "empty-1 dealer deck"
   "empty-2 player empty-3";
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 30em 1fr;
+  grid-template-rows: 1fr 25em;
   height: 90vh;
   min-width: 80em;
+
+
 }
 
 #player-main {
@@ -52,6 +65,8 @@ body {
   grid-template-areas:
   "card-holder balance"
   "card-holder buttons";
+  grid-template-columns: 16em;
+  grid-template-rows: 9.6em 1fr;
   height: 100%;
 
   #card-section {
@@ -66,7 +81,7 @@ body {
       justify-content: center;
       height: 90%;
       width: 90%;
-      border: $primary400 solid 8px;
+      border: $primary400 solid 11px;
       border-radius: 8px;
 
       #card-holder{
@@ -81,20 +96,30 @@ body {
   }
   #balance-section {
     display: flex;
-    // justify-content: center;
+    justify-content: center;
     align-items: center;
     #balance {
       @include money-display();
       border-radius: 8px;
+      width: 11.9em;
     }
   }
     #buttons {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
+      justify-content: space-evenly;
       height: 100%;
       button{
-        margin-top: 1em;
+        width: 11em;
+        height: 4em;
+        background-color: #317D37;
+        box-shadow: -1px -1px 4px 0px #45994C, 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+        border-radius: 9px;
+        border: none;
+        font-family: arvo;
+        color: $primary200;
       }
     }
 
