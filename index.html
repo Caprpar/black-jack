@@ -10,22 +10,40 @@
 
 <body>
   <div id="table">
-
     <div style="grid-area: empty-1;"></div>
     <div style="grid-area: empty-2;"></div>
-    <div id="deck" style="grid-area: deck;"></div>
-    <div id="dealer" style="grid-area: dealer;"></div>
-    <div id="player" style="grid-area: player;">
-      <div id="card-square">
-        <div id="bet"></div>
+    <div style="grid-area: deck;"></div>
+    <div style="grid-area: dealer;"></div>
+
+    <div style="grid-area: player;">
+      <div id="player-main">
+        <div id="card-section" style="grid-area: card-holder;">
+          <div id="card-bet-container">
+            <div id="card-holder"></div>
+            <div id="bet">
+              <p>BET AMOUNT</p>
+              <p id="bet-amount">100$</p>
+            </div>
+          </div>
+        </div>
+        <div id="balance-section" style="grid-area: balance;">
+          <div id="balance">
+            <p>BALANCE</p>
+            <p id="balance-amount">900$</p>
+          </div>
+        </div>
+        <div style="grid-area: buttons;">
+          <div id="buttons">
+            <button>HIT</button>
+            <button>PASS</button>
+            <button>SPLIT</button>
+          </div>
+        </div>
       </div>
-      <div id="balance"></div>
-      <button id="hit">HIT</button>
-      <button id="pass">PASS</button>
     </div>
+
     <div style="grid-area: empty-3;"></div>
-    <script src="black-jack.js"></script>
-  </div>
+    <!-- <script src="black-jack.js"></script> -->
 </body>
 
 </html>

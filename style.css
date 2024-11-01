@@ -20,29 +20,70 @@ body {
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   height: 90vh;
+  min-width: 80em;
 }
 
-#player {
-  display: flex;
+#player-main {
+  display: grid;
+  grid-template-areas: "card-holder balance" "card-holder buttons";
+  height: 100%;
 }
-
-#card-square {
+#player-main #card-section {
   display: flex;
-  width: 4em;
-  height: 8em;
-  border: solid #61A967 7px;
-  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+}
+#player-main #card-section #card-bet-container {
+  display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+  width: 90%;
+  border: #61A967 solid 8px;
+  border-radius: 8px;
 }
-
-#bet {
+#player-main #card-section #card-bet-container #card-holder {
+  flex-grow: 1;
+  width: 100%;
+}
+#player-main #card-section #card-bet-container #bet {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: #61A967;
-  height: 2rem;
-  border: none;
+  height: 6em;
+  width: 100%;
 }
-
-#balance {
-  height: 100px;
-  width: 100px;
+#player-main #card-section #card-bet-container #bet p {
+  margin: 0;
+  text-align: center;
+  line-height: 1.5em;
+}
+#player-main #balance-section {
+  display: flex;
+  align-items: center;
+}
+#player-main #balance-section #balance {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #61A967;
+  height: 6em;
+  width: 100%;
+  border-radius: 8px;
+}
+#player-main #balance-section #balance p {
+  margin: 0;
+  text-align: center;
+  line-height: 1.5em;
+}
+#player-main #buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+#player-main #buttons button {
+  margin-top: 1em;
 }/*# sourceMappingURL=style.css.map */
