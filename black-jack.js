@@ -66,13 +66,11 @@ function getDeck() {
  * @param {Object} deck - Deck object
  */
 function shuffleDeck(deck) {
-  let shuffled = [];
-  while (deck.length !== 0) {
-    let randomCardIdx = Math.floor(Math.random() * deck.length);
-    let randomCard = deck.splice(randomCardIdx, 1);
-    shuffled.push(randomCard);
+  for (let currentCard = 0; currentCard < deck.length; currentCard++) {
+    let swapCard = Math.floor(Math.random() * (deck.length - 1 - currentCard + 1)) + currentCard;
+    [deck[currentCard], deck[swapCard]] = [deck[swapCard], deck[currentCard]];
   }
-  return shuffled;
+  return deck;
 }
 
 /** Returns top card from deck */
@@ -89,14 +87,12 @@ function addToHand(hand, card) {
 function getHandValue(hand) {
   let value = 0;
   // Change jack, queen and king value to 10 and push to handArray
-  for (const currentCard of hand) {
-    let card = currentCard[0];
+  for (const card of hand) {
     card.value = card.value > 10 ? 10 : card.value; // Sets J, Q & Kings value to 10
     value += card.value === 1 ? 11 : card.value;
   }
 
-  for (const currentCard of hand) {
-    let card = currentCard[0];
+  for (const card of hand) {
     value -= card.value === 1 && value > 21 ? 10 : 0;
   }
   return value;
@@ -115,7 +111,7 @@ function displayBoard() {
  */
 function logHand(hand) {
   for (const card of hand) {
-    console.log(card[0].name);
+    console.log(card.name);
   }
   console.log(`Value: ${getHandValue(hand)}`);
 }
@@ -124,7 +120,6 @@ function logHand(hand) {
 function displayCard(parentTag, card, positionX, positionY, rotation) {
   let parent = document.getElementById(parentTag);
   let newCard = document.createElement("div");
-  card = card[0];
 
   newCard.className = "card";
   newCard.id = card.name;
@@ -156,13 +151,14 @@ let playerDrawsCard = false;
 let player = {
   hand: [drawCard(deck), drawCard(deck)],
 };
-
-displayCard("player-card-holder", player.hand[0], 52, 45, 3);
-displayCard("player-card-holder", player.hand[1], 44, 59, -3);
-
 let dealer = {
   hand: [drawCard(deck), drawCard(deck)],
 };
+
+displayCard("player-card-holder", player.hand[0], 52, 45, 3);
+displayCard("player-card-holder", player.hand[1], 44, 59, -3);
+displayCard("dealer-card-holder", dealer.hand[0], 45, 40, -3);
+displayCard("dealer-card-holder", dealer.hand[1], 48, 56, 2);
 
 while (game) {
   // Display dealer score
