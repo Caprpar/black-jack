@@ -52,6 +52,10 @@ p {
   background-repeat: no-repeat;
 }
 
+@mixin deck-card {
+  background-image: url("/svg_playing_cards/backs/red2.svg");
+}
+
 body {
   display: flex;
   margin: 0;
@@ -95,7 +99,12 @@ body {
   grid-template-columns: 1fr 30em 1fr;
   grid-template-rows: 1fr 25em;
   height: 90vh;
-  min-width: 80em;
+  min-width: 94em;
+  min-height: 48em;
+}
+
+#deck {
+  position: relative;
 }
 
 #dealer-main {
@@ -106,9 +115,10 @@ body {
   #dealer-card-holder {
     position: relative;
     height: 18em;
-    width: 30em;
+    width: 27em;
     border: $primary400 solid 11px;
     border-radius: 83px;
+    border-style: none double;
   }
 }
 
@@ -202,6 +212,14 @@ body {
   height: 197px;
   width: 138.11px;
   border: none;
+}
+
+#deck-card-1 {
+  @include deck-card();
+  @include card-image-settting();
+  top: 33%;
+  left: 26%;
+  transform: translate(-50%, -50%) rotate(-16deg);
 }
 
 #clubs_2 {
