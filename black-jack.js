@@ -29,43 +29,29 @@
 
  * @example
  * const card = getCard("king", "heart", 13)
- * console.log(card) // output: kingOfheart: {value: 10, suite: 'heart', img: 'kingOfheart.png', name: 'king of heart', isAce: false}
+ * console.log(card) // output: kingOfheart: {value: 10, suite: 'heart', img: 'spades_2.svg', name: 'king of heart', isAce: false}
 */
 function getCard(cardValue, cardSuite, cardIndex) {
   let card;
-  let cardName = `${cardValue}Of${cardSuite}`;
+  let cardName = `${cardSuite}_${cardValue}`;
   let currentCardValue = cardIndex < 11 ? cardIndex : 10; // value = 10 if card is knight, queen or king
 
   card = {
     value: currentCardValue,
     suite: cardSuite,
-    img: `${cardName}.png`,
-    name: `${cardValue} of ${cardSuite}`,
+    img: `${cardName}.svg`,
+    name: `${cardName}`,
   };
 
   return card;
 }
-console.log();
+
 /**
  * Generates a deck with 52 cards
  */
 function getDeck() {
-  let suites = ["hearth", "club", "spade", "diamond"];
-  let values = [
-    "ace",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-    "knight",
-    "queen",
-    "king",
-  ];
+  let suites = ["hearts", "clubs", "spades", "diamonds"];
+  let values = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"];
 
   let deck = [];
   for (const suite of suites) {
@@ -134,16 +120,45 @@ function logHand(hand) {
   console.log(`Value: ${getHandValue(hand)}`);
 }
 
+// * DOM Functions
+function displayCard(parentTag, card, positionX, positionY, rotation) {
+  let parent = document.getElementById(parentTag);
+  let newCard = document.createElement("div");
+  card = card[0];
+
+  newCard.className = "card";
+  newCard.id = card.name;
+
+  newCard.style.backgroundSize = "contain";
+  newCard.style.backgroundRepeat = "no-repeat";
+
+  newCard.style.backgroundImage = `url('/svg_playing_cards/fronts/${card.img}')`;
+  newCard.style.top = `${positionX}%`;
+  newCard.style.left = `${positionY}%`;
+  newCard.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+
+  parent.appendChild(newCard);
+  /*
+    background-image: url("/svg_playing_cards/fronts/clubs_2.svg");
+  top: 52%;
+  left: 45%;
+  transform: translate(-50%, -50%) rotate(3deg);
+   */
+}
+
 // *======================= GAME STARTS ========================================
 // console.log(getCard("ace", "heart"));
 let deck = shuffleDeck(getDeck());
-let game = true;
+let game = false;
 let playerDrawsCard = false;
 
 // * Deals two card each to player and dealer
 let player = {
   hand: [drawCard(deck), drawCard(deck)],
 };
+
+displayCard("player-card-holder", player.hand[0], 52, 45, 3);
+displayCard("player-card-holder", player.hand[1], 44, 59, -3);
 
 let dealer = {
   hand: [drawCard(deck), drawCard(deck)],
