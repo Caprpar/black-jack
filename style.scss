@@ -47,6 +47,11 @@ p {
   }
 }
 
+@mixin card-image-settting {
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 body {
   display: flex;
   margin: 0;
@@ -56,6 +61,29 @@ body {
   background-color: #317d37;
   justify-content: center;
   align-items: center;
+}
+
+@mixin empty-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+#empty-2 {
+  @include empty-section();
+}
+
+#empty-3 {
+  @include empty-section();
+}
+
+.decoration {
+  display: flex;
+  background-image: url("/images/decoration.svg");
+  background-repeat: no-repeat;
+  height: 3.8em;
+  width: 26em;
+  transform: scale(1.2);
 }
 
 #table {
@@ -70,6 +98,20 @@ body {
   min-width: 80em;
 }
 
+#dealer-main {
+  display: flex;
+  justify-content: center;
+  // align-items: center;
+  height: 100%;
+  #dealer-card-holder {
+    position: relative;
+    height: 18em;
+    width: 30em;
+    border: $primary400 solid 11px;
+    border-radius: 83px;
+  }
+}
+
 #player-main {
   display: grid;
   grid-template-areas:
@@ -79,7 +121,7 @@ body {
   grid-template-rows: 9.6em 1fr;
   height: 100%;
 
-  #card-section {
+  #player-card-section {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -94,7 +136,8 @@ body {
       border: $primary400 solid 11px;
       border-radius: 8px;
 
-      #card-holder {
+      #player-card-holder {
+        position: relative;
         flex-grow: 1;
         width: 100%;
       }
@@ -148,4 +191,44 @@ body {
       background-color: $primary500;
     }
   }
+}
+
+.card {
+  position: absolute;
+  transform-origin: center;
+  height: 197px;
+  width: 138.11px;
+  border: none;
+}
+
+#clubs_2 {
+  @include card-image-settting();
+  background-image: url("/svg_playing_cards/fronts/clubs_2.svg");
+  top: 52%;
+  left: 45%;
+  transform: translate(-50%, -50%) rotate(3deg);
+}
+
+#spades_ace {
+  @include card-image-settting();
+  background-image: url("/svg_playing_cards/fronts/spades_ace.svg");
+  top: 45%;
+  left: 40%;
+  transform: translate(-50%, -50%) rotate(-3deg);
+}
+
+#diamonds_7 {
+  @include card-image-settting();
+  background-image: url("/svg_playing_cards/fronts/diamonds_7.svg");
+  top: 48%;
+  left: 46%;
+  transform: translate(-50%, -50%) rotate(2deg);
+}
+
+#hearts_king {
+  @include card-image-settting();
+  background-image: url("/svg_playing_cards/fronts/hearts_king.svg");
+  top: 44%;
+  left: 59%;
+  transform: translate(-50%, -50%) rotate(0deg);
 }

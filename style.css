@@ -20,6 +20,27 @@ body {
   align-items: center;
 }
 
+#empty-2 {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+#empty-3 {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.decoration {
+  display: flex;
+  background-image: url("/images/decoration.svg");
+  background-repeat: no-repeat;
+  height: 3.8em;
+  width: 26em;
+  transform: scale(1.2);
+}
+
 #table {
   width: 90vw;
   display: grid;
@@ -30,6 +51,19 @@ body {
   min-width: 80em;
 }
 
+#dealer-main {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+#dealer-main #dealer-card-holder {
+  position: relative;
+  height: 18em;
+  width: 30em;
+  border: #61a967 solid 11px;
+  border-radius: 83px;
+}
+
 #player-main {
   display: grid;
   grid-template-areas: "card-holder balance" "card-holder buttons";
@@ -37,12 +71,12 @@ body {
   grid-template-rows: 9.6em 1fr;
   height: 100%;
 }
-#player-main #card-section {
+#player-main #player-card-section {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-#player-main #card-section #card-bet-container {
+#player-main #player-card-section #card-bet-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,11 +86,12 @@ body {
   border: #61a967 solid 11px;
   border-radius: 8px;
 }
-#player-main #card-section #card-bet-container #card-holder {
+#player-main #player-card-section #card-bet-container #player-card-holder {
+  position: relative;
   flex-grow: 1;
   width: 100%;
 }
-#player-main #card-section #card-bet-container #bet {
+#player-main #player-card-section #card-bet-container #bet {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -64,7 +99,7 @@ body {
   height: 6em;
   width: 100%;
 }
-#player-main #card-section #card-bet-container #bet p {
+#player-main #player-card-section #card-bet-container #bet p {
   margin: 0;
   text-align: center;
   line-height: 1.5em;
@@ -121,4 +156,48 @@ body {
 #player-main #buttons .inactive:hover {
   color: #317d37;
   background-color: #4d8c50;
+}
+
+.card {
+  position: absolute;
+  transform-origin: center;
+  height: 197px;
+  width: 138.11px;
+  border: none;
+}
+
+#clubs_2 {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("/svg_playing_cards/fronts/clubs_2.svg");
+  top: 52%;
+  left: 45%;
+  transform: translate(-50%, -50%) rotate(3deg);
+}
+
+#spades_ace {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("/svg_playing_cards/fronts/spades_ace.svg");
+  top: 45%;
+  left: 40%;
+  transform: translate(-50%, -50%) rotate(-3deg);
+}
+
+#diamonds_7 {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("/svg_playing_cards/fronts/diamonds_7.svg");
+  top: 48%;
+  left: 46%;
+  transform: translate(-50%, -50%) rotate(2deg);
+}
+
+#hearts_king {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("/svg_playing_cards/fronts/hearts_king.svg");
+  top: 44%;
+  left: 59%;
+  transform: translate(-50%, -50%) rotate(0deg);
 }/*# sourceMappingURL=style.css.map */
