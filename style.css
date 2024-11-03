@@ -148,6 +148,9 @@ body {
   background-color: #4d8c50;
   color: #d7f5dd;
 }
+#player-main #buttons button:active {
+  box-shadow: none;
+}
 #player-main #buttons .inactive {
   color: #317d37;
   background-color: #4d8c50;

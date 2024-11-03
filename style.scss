@@ -181,6 +181,9 @@ body {
       background-color: $primary500;
       color: $primary000;
     }
+    button:active {
+      box-shadow: none;
+    }
     .inactive {
       color: $primary600;
       background-color: $primary500;
