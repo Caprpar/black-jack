@@ -1,8 +1,22 @@
-$primary600: #317D37;
-$primary400: #61A967;
-$primary200: #A1F5A8;
-$dark: #2E2E2E;
-$red: #E33540;
+$primary600: #317d37;
+$primary400: #61a967;
+$primary200: #a1f5a8;
+$button-neu-shadow: #45994c;
+
+$primary000: #d7f5dd;
+$primary100: #c5f0cf;
+$primary200: #a1f5a8; // given
+$primary300: #7eed82;
+$primary400: #61a967; // given
+$primary500: #4d8c50;
+$primary600: #317d37; // given
+$primary700: #28652e;
+$primary800: #1f4e24;
+$primary900: #15371a;
+$primary1000: #0c200f;
+
+$dark: #2e2e2e;
+$red: #e33540;
 
 * {
   // border: solid $dark;
@@ -10,7 +24,7 @@ $red: #E33540;
 
 @font-face {
   font-family: arvo;
-  src: url('/fonts/Arvo/Arvo-Bold.ttf') format('truetype');
+  src: url("/fonts/Arvo/Arvo-Bold.ttf") format("truetype");
 }
 p {
   font-family: arvo;
@@ -26,13 +40,12 @@ p {
   height: 6em;
   width: 100%;
 
-  p{
+  p {
     margin: 0;
     text-align: center;
     line-height: 1.5em;
   }
 }
-
 
 body {
   display: flex;
@@ -40,31 +53,28 @@ body {
   padding: 0;
   overflow: hidden;
   height: 100vh;
-  background-color: #317D37;
+  background-color: #317d37;
   justify-content: center;
   align-items: center;
 }
-
 
 #table {
   width: 90vw;
   display: grid;
   grid-template-areas:
-  "empty-1 dealer deck"
-  "empty-2 player empty-3";
+    "empty-1 dealer deck"
+    "empty-2 player empty-3";
   grid-template-columns: 1fr 30em 1fr;
   grid-template-rows: 1fr 25em;
   height: 90vh;
   min-width: 80em;
-
-
 }
 
 #player-main {
   display: grid;
   grid-template-areas:
-  "card-holder balance"
-  "card-holder buttons";
+    "card-holder balance"
+    "card-holder buttons";
   grid-template-columns: 16em;
   grid-template-rows: 9.6em 1fr;
   height: 100%;
@@ -84,12 +94,12 @@ body {
       border: $primary400 solid 11px;
       border-radius: 8px;
 
-      #card-holder{
+      #card-holder {
         flex-grow: 1;
         width: 100%;
       }
 
-      #bet{
+      #bet {
         @include money-display();
       }
     }
@@ -104,23 +114,38 @@ body {
       width: 11.9em;
     }
   }
-    #buttons {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      justify-content: space-evenly;
-      height: 100%;
-      button{
-        width: 11em;
-        height: 4em;
-        background-color: #317D37;
-        box-shadow: -1px -1px 4px 0px #45994C, 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
-        border-radius: 9px;
-        border: none;
-        font-family: arvo;
-        color: $primary200;
-      }
-    }
+  #buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+    button {
+      padding: 0;
+      width: 5em;
+      height: 1.9em;
+      background-color: $primary600;
+      color: $primary200;
+      box-shadow: -1px -1px 4px 0px #45994c, 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
 
+      border-radius: 19px;
+      border: none;
+      font-family: arvo;
+      font-size: 2em;
+    }
+    button:hover {
+      background-color: $primary500;
+      color: $primary000;
+    }
+    .inactive {
+      color: $primary600;
+      background-color: $primary500;
+      box-shadow: none;
+    }
+    .inactive:hover {
+      color: $primary600;
+      background-color: $primary500;
+    }
+  }
 }
