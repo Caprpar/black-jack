@@ -40,6 +40,7 @@ function getCard(cardValue, cardSuite, cardIndex) {
     value: currentCardValue,
     suite: cardSuite,
     img: `${cardName}.svg`,
+    backImg: "red2.svg",
     name: `${cardName}`,
   };
 
@@ -117,7 +118,13 @@ function logHand(hand) {
 }
 
 // * DOM Functions
-function displayCard(parentTag, card, positionX, positionY, rotation) {
+function displayCard(parentTag, card, positionX = 0, positionY = 0, rotation = 0, faceUp = true) {
+  card.parent = parentTag;
+  card.x = positionX;
+  card.y = positionY;
+  card.rotation = rotation;
+  card.faceUp = faceUp;
+
   let parent = document.getElementById(parentTag);
   let newCard = document.createElement("div");
 
@@ -127,7 +134,9 @@ function displayCard(parentTag, card, positionX, positionY, rotation) {
   newCard.style.backgroundSize = "contain";
   newCard.style.backgroundRepeat = "no-repeat";
 
-  newCard.style.backgroundImage = `url('/svg_playing_cards/fronts/${card.img}')`;
+  newCard.style.backgroundImage = faceUp
+    ? `url('/svg_playing_cards/fronts/${card.img}')`
+    : `url('/svg_playing_cards/backs/red2.svg')`;
   newCard.style.top = `${positionX}%`;
   newCard.style.left = `${positionY}%`;
   newCard.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
@@ -141,10 +150,19 @@ function displayCard(parentTag, card, positionX, positionY, rotation) {
    */
 }
 
+function revealCards(hand) {
+  for (let card of hand) {
+    if (!card.faceUp) {
+      displayCard(card.parent, card, card.x, card.y, card.rotation, true);
+    }
+  }
+}
+
 // *======================= GAME STARTS ========================================
 // console.log(getCard("ace", "heart"));
 let deck = shuffleDeck(getDeck());
-let game = false;
+let consoleGame = false;
+let browserGame = true;
 let playerDrawsCard = false;
 
 // * Deals two card each to player and dealer
@@ -155,16 +173,28 @@ let dealer = {
   hand: [drawCard(deck), drawCard(deck)],
 };
 
+// *======================= Draw starthands ====================================
+// TODO Fixa så korten får egna positionsvärden så nya kort kan utgå från föregående position
 displayCard("player-card-holder", player.hand[0], 52, 45, 3);
 displayCard("player-card-holder", player.hand[1], 44, 59, -3);
+console.log(getHandValue(player.hand));
 displayCard("dealer-card-holder", dealer.hand[0], 45, 40, -3);
-displayCard("dealer-card-holder", dealer.hand[1], 48, 56, 2);
+displayCard("dealer-card-holder", dealer.hand[1], 48, 56, 2, false);
+console.log(getHandValue(dealer.hand));
 
-while (game) {
-  // Display dealer score
-  displayBoard();
+let hit = false;
+let pass = false;
+let split = false;
 
-  // Player choose to draw card if hand not blackjack
+let hitElement = document.getElementById("hit");
+let passElement = document.getElementById("pass");
+let splitElement = document.getElementById("split");
+
+let clickedHit = () => true;
+let clickedPass = () => true;
+let clickedSplit = () => true;
+
+while (consoleGame) {
   if (getHandValue(player.hand) !== 21) {
     // * Vill spelaren dra ett till kort?
     playerDrawsCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
@@ -196,6 +226,25 @@ while (game) {
   // Delaer drar ett kort om dens poäng är under 16
   // game = false;
 }
+
+hitElement.addEventListener("click", () => {
+  console.log("Tryckte hit");
+  player.hand.push(displayCard("player-card-holder", drawCard(deck), 36, 71, 2));
+});
+
+passElement.addEventListener("click", () => {
+  console.log("Tryckte pass");
+  revealCards(dealer.hand);
+});
+
+splitElement.addEventListener("click", () => {
+  console.log("Tryckte split");
+});
+// Check if player hits, draw new card then reveal dealers hidden card
+// Check if player passes if so, dealer draws until done
+// Check if player have two of same cards, allow split, check if split
+
+// Player choose to draw card if hand not blackjack
 
 displayBoard();
 
