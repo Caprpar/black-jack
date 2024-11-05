@@ -22,6 +22,10 @@
  * [ ] Val att dra ett kort elle stanna
  */
 
+let randInt = (min, max) => Math.floor(Math.random() * (max + 1 - min) + min);
+
+console.log(randInt(4, 9));
+
 /** Generates card
  * @param {String} cardValue - card valueName "Ace", "One", "King"
  * @param {String} cardSuite - card suite "hearts", "clubs"
@@ -89,11 +93,13 @@ function getHandValue(hand) {
   let value = 0;
   // Change jack, queen and king value to 10 and push to handArray
   for (const card of hand) {
+    if (!card.faceUp) break;
     card.value = card.value > 10 ? 10 : card.value; // Sets J, Q & Kings value to 10
     value += card.value === 1 ? 11 : card.value;
   }
 
   for (const card of hand) {
+    if (!card.faceUp) break;
     value -= card.value === 1 && value > 21 ? 10 : 0;
   }
   return value;
@@ -118,14 +124,8 @@ function logHand(hand) {
 }
 
 // * DOM Functions
-function displayCard(parentTag, card, positionX = 0, positionY = 0, rotation = 0, faceUp = true) {
-  card.parent = parentTag;
-  card.x = positionX;
-  card.y = positionY;
-  card.rotation = rotation;
-  card.faceUp = faceUp;
-
-  let parent = document.getElementById(parentTag);
+function displayCard(card) {
+  let parent = document.getElementById(card.parent);
   let newCard = document.createElement("div");
 
   newCard.className = "card";
@@ -134,12 +134,12 @@ function displayCard(parentTag, card, positionX = 0, positionY = 0, rotation = 0
   newCard.style.backgroundSize = "contain";
   newCard.style.backgroundRepeat = "no-repeat";
 
-  newCard.style.backgroundImage = faceUp
+  newCard.style.backgroundImage = card.faceUp
     ? `url('/svg_playing_cards/fronts/${card.img}')`
     : `url('/svg_playing_cards/backs/red2.svg')`;
-  newCard.style.top = `${positionX}%`;
-  newCard.style.left = `${positionY}%`;
-  newCard.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+  newCard.style.top = `${card.y}px`;
+  newCard.style.left = `${card.x}px`;
+  newCard.style.transform = `translate(-50%, -50%) rotate(${card.rotation}deg)`;
 
   parent.appendChild(newCard);
   /*
@@ -150,10 +150,59 @@ function displayCard(parentTag, card, positionX = 0, positionY = 0, rotation = 0
    */
 }
 
-function revealCards(hand) {
+/**
+ * Gives card styling value such as coodinates and rotation
+ */
+function setCardPositionValues(card, x, y, rotation, parent, faceUp = true) {
+  card.parent = parent;
+  card.x = x;
+  card.y = y;
+  card.rotation = rotation;
+  card.faceUp = faceUp;
+}
+
+/**
+ * Toggle which side facing up
+ * (replaces old div with new one)
+ */
+function flipCard(card) {
+  card.faceUp = card.faceUp ? false : true;
+  document.getElementById(card.name).remove();
+  displayCard(card);
+}
+
+/**
+ * Adds card to player hand and give card positionvalues depending on which number the card is
+ */
+function appendCardToHand(participant, deck, faceUp = true) {
+  let startY = participant.parentId === "player-card-holder" ? 137 : 153;
+  let startX = participant.parentId === "player-card-holder" ? 77 : 164;
+  let card = drawCard(deck);
+  let handLen = participant.hand.length + 1;
+  let randomX = randInt(25, 26) * handLen;
+  let x = startX + randomX;
+  let randomY = randInt(-17, -18) * handLen;
+  let y = startY + randomY;
+  let randomDeg = randInt(-3, 3);
+  setCardPositionValues(card, x, y, randomDeg, participant.parentId, faceUp);
+  participant.hand.push(card);
+}
+
+function displayHands(...hands) {
+  for (const hand of hands) {
+    for (const card of hand) {
+      displayCard(card);
+    }
+  }
+}
+
+/**
+ * If there are any facedown card, reveal them
+ */
+function revealDealerHand(hand) {
   for (let card of hand) {
     if (!card.faceUp) {
-      displayCard(card.parent, card, card.x, card.y, card.rotation, true);
+      flipCard(card);
     }
   }
 }
@@ -167,32 +216,30 @@ let playerDrawsCard = false;
 
 // * Deals two card each to player and dealer
 let player = {
-  hand: [drawCard(deck), drawCard(deck)],
+  parentId: "player-card-holder",
+  hand: [],
 };
 let dealer = {
-  hand: [drawCard(deck), drawCard(deck)],
+  parentId: "dealer-card-holder",
+  hand: [],
 };
+
+// Deal start hands to player and dealer
+appendCardToHand(player, deck);
+appendCardToHand(player, deck);
+appendCardToHand(dealer, deck);
+appendCardToHand(dealer, deck, false);
+
+displayHands(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
 // TODO Fixa så korten får egna positionsvärden så nya kort kan utgå från föregående position
-displayCard("player-card-holder", player.hand[0], 52, 45, 3);
-displayCard("player-card-holder", player.hand[1], 44, 59, -3);
 console.log(getHandValue(player.hand));
-displayCard("dealer-card-holder", dealer.hand[0], 45, 40, -3);
-displayCard("dealer-card-holder", dealer.hand[1], 48, 56, 2, false);
 console.log(getHandValue(dealer.hand));
-
-let hit = false;
-let pass = false;
-let split = false;
 
 let hitElement = document.getElementById("hit");
 let passElement = document.getElementById("pass");
 let splitElement = document.getElementById("split");
-
-let clickedHit = () => true;
-let clickedPass = () => true;
-let clickedSplit = () => true;
 
 while (consoleGame) {
   if (getHandValue(player.hand) !== 21) {
@@ -229,12 +276,17 @@ while (consoleGame) {
 
 hitElement.addEventListener("click", () => {
   console.log("Tryckte hit");
-  player.hand.push(displayCard("player-card-holder", drawCard(deck), 36, 71, 2));
+  appendCardToHand(player, deck);
+  displayHands(player.hand, dealer.hand);
+  console.log(getHandValue(player.hand));
+  console.log(getHandValue(dealer.hand));
 });
 
 passElement.addEventListener("click", () => {
   console.log("Tryckte pass");
-  revealCards(dealer.hand);
+  revealDealerHand(dealer.hand);
+  console.log(getHandValue(player.hand));
+  console.log(getHandValue(dealer.hand));
 });
 
 splitElement.addEventListener("click", () => {
@@ -245,6 +297,8 @@ splitElement.addEventListener("click", () => {
 // Check if player have two of same cards, allow split, check if split
 
 // Player choose to draw card if hand not blackjack
+
+// *======================= Console Game END ===================================
 
 displayBoard();
 
