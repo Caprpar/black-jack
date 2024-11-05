@@ -207,8 +207,30 @@ function revealDealerHand(hand) {
   }
 }
 
+// TODO Fixa dessa funktioner, är en knapp inaktiverad så syns det och inget händer vid interagering
+function disableButton(button) {}
+
+function enableButton(button) {}
+
+function updateButtons(buttons) {}
+
 // *======================= GAME STARTS ========================================
 // console.log(getCard("ace", "heart"));
+//* Buttons
+let hit = {
+  id: "hit",
+  active: true,
+};
+let pass = {
+  id: "pass",
+  active: true,
+};
+let split = {
+  id: "split",
+  active: false,
+};
+let buttons = [hit, pass, split];
+
 let deck = shuffleDeck(getDeck());
 let consoleGame = false;
 let browserGame = true;
@@ -230,49 +252,16 @@ appendCardToHand(player, deck);
 appendCardToHand(dealer, deck);
 appendCardToHand(dealer, deck, false);
 
+// Make cards visable on table
 displayHands(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
-// TODO Fixa så korten får egna positionsvärden så nya kort kan utgå från föregående position
 console.log(getHandValue(player.hand));
 console.log(getHandValue(dealer.hand));
 
 let hitElement = document.getElementById("hit");
 let passElement = document.getElementById("pass");
 let splitElement = document.getElementById("split");
-
-while (consoleGame) {
-  if (getHandValue(player.hand) !== 21) {
-    // * Vill spelaren dra ett till kort?
-    playerDrawsCard = prompt("Dra kort? (y/n)") === "y" ? true : false;
-  }
-
-  if (playerDrawsCard) {
-    player.hand.push(drawCard(deck));
-
-    if (getHandValue(player.hand) > 21) {
-      break;
-    }
-  } else {
-    // När spelaren tackar nej till kort, drar dealern upp kort medans värdet är < 16
-    while (getHandValue(dealer.hand) < 16) {
-      dealer.hand.push(drawCard(deck));
-    }
-  }
-  // Om spelaren drar kort ska dealern oxå dra kort om dealers hand är < 16
-  if (getHandValue(dealer.hand) < 16) {
-    dealer.hand.push(drawCard(deck));
-  } else {
-    break;
-  }
-
-  // * Dealer drar kort om totala värde < 16
-  // Display player score
-  // Spelare och dealer drar två kort var
-  // Spelare väljer om den vill dra ett nytt kort
-  // Delaer drar ett kort om dens poäng är under 16
-  // game = false;
-}
 
 hitElement.addEventListener("click", () => {
   console.log("Tryckte hit");
@@ -297,30 +286,3 @@ splitElement.addEventListener("click", () => {
 // Check if player have two of same cards, allow split, check if split
 
 // Player choose to draw card if hand not blackjack
-
-// *======================= Console Game END ===================================
-
-displayBoard();
-
-console.log(`Player value = ${getHandValue(player.hand)}`);
-console.log(`Dealer value = ${getHandValue(dealer.hand)}`);
-
-let playerHand = getHandValue(player.hand);
-let dealerHand = getHandValue(dealer.hand);
-
-if (playerHand > 21) {
-  console.log("lost");
-} else if (dealerHand > 21 || dealerHand < playerHand) {
-  console.log("win");
-} else if (playerHand === dealerHand && playerHand < 20) {
-  console.log("lost");
-} else if (playerHand === dealerHand && playerHand > 19) {
-  console.log("tie");
-} else if (playerHand === 21) {
-  console.log("BLACKJACK WIN!");
-} else {
-  console.log("Player hand | Dealer hand");
-  console.log(`${playerHand} > ${dealerHand} | ${playerHand > dealerHand}`);
-  console.log(`${playerHand} < ${dealerHand} | ${playerHand < dealerHand}`);
-  console.log(`${playerHand} === ${dealerHand} | ${playerHand === dealerHand}`);
-}
