@@ -24,8 +24,6 @@
 
 let randInt = (min, max) => Math.floor(Math.random() * (max + 1 - min) + min);
 
-console.log(randInt(4, 9));
-
 /** Generates card
  * @param {String} cardValue - card valueName "Ace", "One", "King"
  * @param {String} cardSuite - card suite "hearts", "clubs"
@@ -208,11 +206,22 @@ function revealDealerHand(hand) {
 }
 
 // TODO Fixa dessa funktioner, är en knapp inaktiverad så syns det och inget händer vid interagering
-function disableButton(button) {}
+function disableButton(button) {
+  const buttonElement = document.getElementById(button.id);
+  buttonElement.classList.add("inactive");
+  button.active = false;
+}
 
-function enableButton(button) {}
+function enableButton(button) {
+  const buttonElement = document.getElementById(button.id);
+  buttonElement.classList.remove("inactive");
+  button.active = true;
+}
 
-function updateButtons(buttons) {}
+function logHandValues() {
+  console.log(`Player hand: ${getHandValue(player.hand)}`);
+  console.log(`Dealer hand: ${getHandValue(dealer.hand)}`);
+}
 
 // *======================= GAME STARTS ========================================
 // console.log(getCard("ace", "heart"));
@@ -256,33 +265,39 @@ appendCardToHand(dealer, deck, false);
 displayHands(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
-console.log(getHandValue(player.hand));
-console.log(getHandValue(dealer.hand));
+logHandValues();
 
 let hitElement = document.getElementById("hit");
 let passElement = document.getElementById("pass");
 let splitElement = document.getElementById("split");
 
+// * Response to the HIT button
 hitElement.addEventListener("click", () => {
-  console.log("Tryckte hit");
-  appendCardToHand(player, deck);
-  displayHands(player.hand, dealer.hand);
-  console.log(getHandValue(player.hand));
-  console.log(getHandValue(dealer.hand));
+  if (hit.active) {
+    appendCardToHand(player, deck);
+    displayHands(player.hand, dealer.hand);
+    logHandValues();
+  }
 });
 
+// * Response to the PASS button
 passElement.addEventListener("click", () => {
-  console.log("Tryckte pass");
-  revealDealerHand(dealer.hand);
-  console.log(getHandValue(player.hand));
-  console.log(getHandValue(dealer.hand));
+  if (pass.active) {
+    disableButton(hit);
+    disableButton(pass);
+    revealDealerHand(dealer.hand);
+    logHandValues();
+  }
 });
 
+// * Response to the SPLIT button
 splitElement.addEventListener("click", () => {
-  console.log("Tryckte split");
+  if (split.active) {
+    console.log("Tryckte split");
+  }
 });
 // Check if player hits, draw new card then reveal dealers hidden card
 // Check if player passes if so, dealer draws until done
 // Check if player have two of same cards, allow split, check if split
 
-// Player choose to draw card if hand not blackjack
+// Dealer choose to draw card dealer hand not blackjack
