@@ -245,6 +245,24 @@ function logHandValues() {
   console.log(`Dealer hand: ${getHandValue(dealer.hand)}`);
 }
 
+/* Compares playerhand with dealerhand and return  */
+function getWinner(playerHandValue, dealerHandValue) {
+  const winner = { participant: "", hasBlackjack: false, isDraw: false };
+  if (playerHandValue > 21) {
+    winner.participant = "dealer";
+  } else if (playerHandValue === dealerHandValue) {
+    winner.isDraw = true;
+  } else if (playerHandValue === 21) {
+    winner.participant = "player";
+    winner.hasBlackjack = true;
+  } else if (playerHandValue > dealerHandValue) {
+    winner.participant = "player";
+  } else if (playerHandValue < dealerHandValue) {
+    winner.participant = "dealer";
+  }
+  return winner;
+}
+
 // *======================= GAME STARTS ========================================
 
 const gameCondition = {
@@ -267,12 +285,7 @@ let split = {
   id: "split",
   active: false,
 };
-let buttons = [hit, pass, split];
-
 let deck = shuffleDeck(getDeck());
-let consoleGame = false;
-let browserGame = true;
-let playerDrawsCard = false;
 
 // * Deals two card each to player and dealer
 let player = {
@@ -283,12 +296,20 @@ let dealer = {
   parentId: "dealer-card-holder",
   hand: [],
 };
+let winner = {};
 
 // Deal start hands to player and dealer
 appendCardToHand(player, deck);
 appendCardToHand(player, deck);
 appendCardToHand(dealer, deck);
 appendCardToHand(dealer, deck, false);
+
+if (getHandValue(player.hand) === 21) {
+  revealDealerHand(dealer.hand);
+  if (getHandValue(dealer.hand) !== getHandValue(player.hand)) {
+    revealContition(gameCondition.blackJack);
+  }
+}
 
 // // Make cards visable on table
 // displayHands(player.hand, dealer.hand);
@@ -309,6 +330,7 @@ hitElement.addEventListener("click", () => {
     appendCardToHand(player, deck);
     displayHands(player.hand, dealer.hand);
     logHandValues();
+
     if (getHandValue(player.hand) > 21) {
       revealContition(gameCondition.lost);
     } else if (getHandValue(player.hand) === 21) {
@@ -328,20 +350,8 @@ passElement.addEventListener("click", () => {
     while (getHandValue(dealer.hand) < 17) {
       appendCardToHand(dealer, deck);
     }
-    if (getHandValue(player.hand) === 21) revealContition(gameCondition.blackJack);
-    if (getHandValue(player.hand) > getHandValue(dealer.hand)) revealContition(gameCondition.win);
-    if (getHandValue(player.hand) > 21) revealContition(gameCondition.lost);
-    if (
-      getHandValue(player.hand) < 21 &&
-      getHandValue(dealer.hand) <= 21 &&
-      getHandValue(player.hand) < getHandValue(dealer.hand)
-    ) {
-      revealContition(gameCondition.lost);
-    }
-    if (getHandValue(player.hand) === getHandValue(dealer.hand)) {
-      revealContition(gameCondition.draw);
-    }
-    if (getHandValue(dealer.hand) > 21) revealContition(gameCondition.win);
+    winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
+    console.log(winner);
   }
 });
 
