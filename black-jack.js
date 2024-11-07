@@ -227,17 +227,31 @@ function refreshButtons() {
   disableButton(split);
 }
 
-/**Displays text within win-status div*/
-function revealContition(displayText, reveal = true) {
+/**Gets winner object and decide what to display in win-status*/
+function revealWinStatus(winner, reveal = true) {
+  const gameState = {
+    win: "You won!",
+    lost: "You lost..",
+    draw: "Push!",
+    blackJack: "BLACKJACK!",
+  };
+
   const winStatusElement = document.getElementById("win-status");
   const status = document.getElementById("status");
-  status.innerText = displayText;
 
-  if (reveal) {
-    winStatusElement.style.visibility = "visible";
+  if (winner.isDraw) {
+    status.innerText = gameState.draw;
+  } else if (winner.participant === "player") {
+    if (winner.hasBlackjack) {
+      status.innerText = gameState.blackJack;
+    }
+    status.innerText = gameState.win;
+  } else if (winner.participant === "dealer") {
+    status.innerText = gameState.lost;
   } else {
-    winStatusElement.style.visibility = "hidden";
+    status.innerText = "Error";
   }
+  winStatusElement.style.visibility = reveal ? "visible" : "hidden";
 }
 
 function logHandValues() {
@@ -245,6 +259,7 @@ function logHandValues() {
   console.log(`Dealer hand: ${getHandValue(dealer.hand)}`);
 }
 
+// TODO Add Dealer bust, player bust, lost
 /* Compares playerhand with dealerhand and return  */
 function getWinner(playerHandValue, dealerHandValue) {
   const winner = { participant: "", hasBlackjack: false, isDraw: false };
@@ -257,6 +272,8 @@ function getWinner(playerHandValue, dealerHandValue) {
     winner.hasBlackjack = true;
   } else if (playerHandValue > dealerHandValue) {
     winner.participant = "player";
+  } else if (dealerHandValue > 21) {
+    winner.participant = "player";
   } else if (playerHandValue < dealerHandValue) {
     winner.participant = "dealer";
   }
@@ -264,13 +281,6 @@ function getWinner(playerHandValue, dealerHandValue) {
 }
 
 // *======================= GAME STARTS ========================================
-
-const gameCondition = {
-  win: "You won!",
-  lost: "You lost..",
-  draw: "Push!",
-  blackJack: "BLACKJACK!",
-};
 
 //* Buttons
 let hit = {
@@ -304,15 +314,13 @@ appendCardToHand(player, deck);
 appendCardToHand(dealer, deck);
 appendCardToHand(dealer, deck, false);
 
+//* what happens when player get blackjack as startinghand
 if (getHandValue(player.hand) === 21) {
   revealDealerHand(dealer.hand);
   if (getHandValue(dealer.hand) !== getHandValue(player.hand)) {
-    revealContition(gameCondition.blackJack);
+    revealWinStatus(gameCondition.blackJack);
   }
 }
-
-// // Make cards visable on table
-// displayHands(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
 logHandValues();
@@ -332,9 +340,10 @@ hitElement.addEventListener("click", () => {
     logHandValues();
 
     if (getHandValue(player.hand) > 21) {
-      revealContition(gameCondition.lost);
+      winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
+      revealWinStatus(winner);
     } else if (getHandValue(player.hand) === 21) {
-      revealContition(gameCondition.blackJack);
+      revealWinStatus(gameCondition.blackJack);
     }
   }
 });
@@ -351,6 +360,7 @@ passElement.addEventListener("click", () => {
       appendCardToHand(dealer, deck);
     }
     winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
+    revealWinStatus(winner);
     console.log(winner);
   }
 });
