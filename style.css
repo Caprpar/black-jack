@@ -9,6 +9,39 @@ p {
        columns: #2e2e2e;
 }
 
+button {
+  padding: 0;
+  width: 5em;
+  height: 1.9em;
+  background-color: #317d37;
+  color: #a1f5a8;
+  box-shadow: -1px -1px 4px 0px #45994c, 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 19px;
+  border: none;
+  font-family: arvo;
+  font-size: 2em;
+}
+
+button:hover {
+  background-color: #4d8c50;
+  color: #d7f5dd;
+}
+
+button:active {
+  box-shadow: none;
+}
+
+.inactive {
+  color: #317d37;
+  background-color: #4d8c50;
+  box-shadow: none;
+}
+
+.inactive:hover {
+  color: #317d37;
+  background-color: #4d8c50;
+}
+
 body {
   display: flex;
   margin: 0;
@@ -19,6 +52,40 @@ body {
   justify-content: center;
   align-items: center;
   transform: scale(0.8);
+}
+
+#win-status {
+  visibility: hidden;
+  position: fixed;
+  align-self: center;
+  justify-self: center;
+  background-color: #61a967;
+  height: 13em;
+  width: 36em;
+  border-radius: 42px;
+  border: double 30px #317d37;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#win-status p {
+  font-size: 4.8em;
+  margin: 0;
+}
+#win-status div {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+}
+#win-status button {
+  transform: scale(0.8);
+  width: auto;
+  background-color: rgba(1, 1, 1, 0);
+  padding: 0 1em;
+  box-shadow: none;
+  border: dashed #317d37 4.6px;
 }
 
 #empty-2 {

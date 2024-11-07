@@ -32,6 +32,36 @@ p {
   columns: $dark;
 }
 
+button {
+  padding: 0;
+  width: 5em;
+  height: 1.9em;
+  background-color: $primary600;
+  color: $primary200;
+  box-shadow: -1px -1px 4px 0px #45994c, 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+
+  border-radius: 19px;
+  border: none;
+  font-family: arvo;
+  font-size: 2em;
+}
+button:hover {
+  background-color: $primary500;
+  color: $primary000;
+}
+button:active {
+  box-shadow: none;
+}
+.inactive {
+  color: $primary600;
+  background-color: $primary500;
+  box-shadow: none;
+}
+.inactive:hover {
+  color: $primary600;
+  background-color: $primary500;
+}
+
 @mixin money-display {
   display: flex;
   flex-direction: column;
@@ -56,6 +86,12 @@ p {
   background-image: url("/svg_playing_cards/backs/red2.svg");
 }
 
+@mixin empty-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
 body {
   display: flex;
   margin: 0;
@@ -68,10 +104,38 @@ body {
   transform: scale(0.8);
 }
 
-@mixin empty-section {
+#win-status {
+  visibility: hidden;
+  position: fixed;
+  align-self: center;
+  justify-self: center;
+  background-color: #61a967;
+  height: 13em;
+  width: 36em;
+  border-radius: 42px;
+  border: double 30px #317d37;
   display: flex;
-  align-items: flex-end;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  p {
+    font-size: 4.8em;
+    margin: 0;
+  }
+  div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+  }
+  button {
+    transform: scale(0.8);
+    width: auto;
+    background-color: rgba(1, 1, 1, 0);
+    padding: 0 1em;
+    box-shadow: none;
+    border: dashed #317d37 4.6px;
+  }
 }
 
 #empty-2 {

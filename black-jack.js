@@ -184,6 +184,7 @@ function appendCardToHand(participant, deck, faceUp = true) {
   let randomDeg = randInt(-3, 3);
   setCardPositionValues(card, x, y, randomDeg, participant.parentId, faceUp);
   participant.hand.push(card);
+  displayHands(player.hand, dealer.hand);
 }
 
 function displayHands(...hands) {
@@ -205,17 +206,38 @@ function revealDealerHand(hand) {
   }
 }
 
-// TODO Fixa dessa funktioner, är en knapp inaktiverad så syns det och inget händer vid interagering
+/**Disables chosen button*/
 function disableButton(button) {
   const buttonElement = document.getElementById(button.id);
   buttonElement.classList.add("inactive");
   button.active = false;
 }
 
+/**Enables chosen button*/
 function enableButton(button) {
   const buttonElement = document.getElementById(button.id);
   buttonElement.classList.remove("inactive");
   button.active = true;
+}
+
+/** sets buttons back to original state */
+function refreshButtons() {
+  enableButton(hit);
+  enableButton(pass);
+  disableButton(split);
+}
+
+/**Displays text within win-status div*/
+function revealContition(displayText, reveal = true) {
+  const winStatusElement = document.getElementById("win-status");
+  const status = document.getElementById("status");
+  status.innerText = displayText;
+
+  if (reveal) {
+    winStatusElement.style.visibility = "visible";
+  } else {
+    winStatusElement.style.visibility = "hidden";
+  }
 }
 
 function logHandValues() {
@@ -224,7 +246,14 @@ function logHandValues() {
 }
 
 // *======================= GAME STARTS ========================================
-// console.log(getCard("ace", "heart"));
+
+const gameCondition = {
+  win: "You won!",
+  lost: "You lost..",
+  draw: "Push!",
+  blackJack: "BLACKJACK!",
+};
+
 //* Buttons
 let hit = {
   id: "hit",
@@ -261,8 +290,8 @@ appendCardToHand(player, deck);
 appendCardToHand(dealer, deck);
 appendCardToHand(dealer, deck, false);
 
-// Make cards visable on table
-displayHands(player.hand, dealer.hand);
+// // Make cards visable on table
+// displayHands(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
 logHandValues();
@@ -270,13 +299,21 @@ logHandValues();
 let hitElement = document.getElementById("hit");
 let passElement = document.getElementById("pass");
 let splitElement = document.getElementById("split");
+let closeElement = document.getElementById("close");
+let newHandElement = document.getElementById("new-hand");
 
+// TODO FIXA LOGIKEN OCH VILKOR OM SPELAREN VINNER
 // * Response to the HIT button
 hitElement.addEventListener("click", () => {
   if (hit.active) {
     appendCardToHand(player, deck);
     displayHands(player.hand, dealer.hand);
     logHandValues();
+    if (getHandValue(player.hand) > 21) {
+      revealContition(gameCondition.lost);
+    } else if (getHandValue(player.hand) === 21) {
+      revealContition(gameCondition.blackJack);
+    }
   }
 });
 
@@ -287,6 +324,24 @@ passElement.addEventListener("click", () => {
     disableButton(pass);
     revealDealerHand(dealer.hand);
     logHandValues();
+    // TODO METHOD THAT DRAWS CARD WHILE HANDVALUE < 17
+    while (getHandValue(dealer.hand) < 17) {
+      appendCardToHand(dealer, deck);
+    }
+    if (getHandValue(player.hand) === 21) revealContition(gameCondition.blackJack);
+    if (getHandValue(player.hand) > getHandValue(dealer.hand)) revealContition(gameCondition.win);
+    if (getHandValue(player.hand) > 21) revealContition(gameCondition.lost);
+    if (
+      getHandValue(player.hand) < 21 &&
+      getHandValue(dealer.hand) <= 21 &&
+      getHandValue(player.hand) < getHandValue(dealer.hand)
+    ) {
+      revealContition(gameCondition.lost);
+    }
+    if (getHandValue(player.hand) === getHandValue(dealer.hand)) {
+      revealContition(gameCondition.draw);
+    }
+    if (getHandValue(dealer.hand) > 21) revealContition(gameCondition.win);
   }
 });
 
@@ -295,6 +350,18 @@ splitElement.addEventListener("click", () => {
   if (split.active) {
     console.log("Tryckte split");
   }
+});
+
+// * Response to the CLOSE button
+closeElement.addEventListener("click", () => {
+  document.getElementById("win-status").style.visibility = "hidden";
+});
+
+// * Response to the GET NEW HAND button
+newHandElement.addEventListener("click", () => {
+  document.getElementById("win-status").style.visibility = "hidden";
+  console.log("Get new hand");
+  refreshButtons();
 });
 // Check if player hits, draw new card then reveal dealers hidden card
 // Check if player passes if so, dealer draws until done
