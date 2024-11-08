@@ -24,7 +24,7 @@ $red: #e33540;
 
 @font-face {
   font-family: arvo;
-  src: url("/fonts/Arvo/Arvo-Bold.ttf") format("truetype");
+  src: url("fonts/Arvo/Arvo-Bold.ttf") format("truetype");
 }
 p {
   font-family: arvo;
@@ -83,7 +83,7 @@ button:active {
 }
 
 @mixin deck-card {
-  background-image: url("/svg_playing_cards/backs/red2.svg");
+  background-image: url("svg_playing_cards/backs/red2.svg");
 }
 
 @mixin empty-section {
@@ -148,7 +148,7 @@ body {
 
 .decoration {
   display: flex;
-  background-image: url("/images/decoration.svg");
+  background-image: url("images/decoration.svg");
   background-repeat: no-repeat;
   height: 3.8em;
   width: 26em;
@@ -285,36 +285,4 @@ body {
   top: 33%;
   left: 26%;
   transform: translate(-50%, -50%) rotate(-16deg);
-}
-
-#clubs_2 {
-  @include card-image-setting();
-  background-image: url("/svg_playing_cards/fronts/clubs_2.svg");
-  top: 52%;
-  left: 45%;
-  transform: translate(-50%, -50%) rotate(3deg);
-}
-
-#spades_ace {
-  @include card-image-setting();
-  background-image: url("/svg_playing_cards/fronts/spades_ace.svg");
-  top: 45%;
-  left: 40%;
-  transform: translate(-50%, -50%) rotate(-3deg);
-}
-
-#diamonds_7 {
-  @include card-image-setting();
-  background-image: url("/svg_playing_cards/fronts/diamonds_7.svg");
-  top: 48%;
-  left: 46%;
-  transform: translate(-50%, -50%) rotate(2deg);
-}
-
-#hearts_king {
-  @include card-image-setting();
-  background-image: url("/svg_playing_cards/fronts/hearts_king.svg");
-  top: 44%;
-  left: 59%;
-  transform: translate(-50%, -50%) rotate(0deg);
 }

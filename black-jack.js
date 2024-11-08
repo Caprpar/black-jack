@@ -135,8 +135,8 @@ function displayCard(card) {
   newCard.style.backgroundRepeat = "no-repeat";
 
   newCard.style.backgroundImage = card.faceUp
-    ? `url('/svg_playing_cards/fronts/${card.img}')`
-    : `url('/svg_playing_cards/backs/red2.svg')`;
+    ? `url('svg_playing_cards/fronts/${card.img}')`
+    : `url('svg_playing_cards/backs/red2.svg')`;
   newCard.style.top = `${card.y}px`;
   newCard.style.left = `${card.x}px`;
   newCard.style.transform = `translate(-50%, -50%) rotate(${card.rotation}deg)`;
