@@ -256,7 +256,7 @@ function refreshButtons() {
 
 /**Gets winner object and decide what to display in win-status*/
 function revealWinStatus(playerHand, dealerHand, reveal = true) {
-  let winner = getWinner(playerHand, dealerHand);
+  let winner = getWinner(getHandValue(playerHand), getHandValue(dealerHand));
   const gameState = {
     win: "You won!",
     lost: "You lost..",
@@ -287,10 +287,7 @@ function logHandValues() {
   console.log(`Dealer hand: ${getHandValue(dealer.hand)}`);
 }
 
-// TODO Add Dealer bust, player bust, lost
-/** Compares playerhand with dealerhand and return winner object
- * @returns winner object => {isDraw: false, participant: "player", hasBlackJack: false}
- */
+/** Compares playerhand with dealerhand and return winner object*/
 function getWinner(playerHandValue, dealerHandValue) {
   const winner = { participant: "", hasBlackjack: false, isDraw: false };
   if (playerHandValue > 21) {
@@ -310,6 +307,7 @@ function getWinner(playerHandValue, dealerHandValue) {
   return winner;
 }
 
+// TODO Add Dealer bust, player bust, lost
 // TODO check if deck has only one card left and reshuffle deck
 // TODO add amount getDeck() so getDeck(amount) can generates mulitple decks
 // TODO draw facedowncard to stack the deck and when card is drawn, remove top element
@@ -362,10 +360,11 @@ let newHandElement = document.getElementById("new-hand");
 hitElement.addEventListener("click", () => {
   if (hit.active) {
     appendCardToHand(player, deck);
-    displayHands(player.hand, dealer.hand);
     logHandValues();
 
     if (getHandValue(player.hand) >= 21) {
+      disableButton(hit);
+      disableButton(stand);
       winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
       revealWinStatus(player.hand, dealer.hand);
     }
@@ -373,7 +372,7 @@ hitElement.addEventListener("click", () => {
   logHandValues();
 });
 
-// * Response to the PASS button
+// * Response to the STAND button
 standElement.addEventListener("click", () => {
   if (stand.active) {
     disableButton(hit);
@@ -384,6 +383,7 @@ standElement.addEventListener("click", () => {
       appendCardToHand(dealer, deck);
     }
     winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
+    logHandValues();
     revealWinStatus(player.hand, dealer.hand);
     console.log(winner);
   }
@@ -410,8 +410,3 @@ newHandElement.addEventListener("click", () => {
   refreshButtons();
   console.log(deck.length);
 });
-// Check if player hits, draw new card then reveal dealers hidden card
-// Check if player passes if so, dealer draws until done
-// Check if player have two of same cards, allow split, check if split
-
-// Dealer choose to draw card dealer hand not blackjack
