@@ -250,7 +250,7 @@ function enableButton(button) {
 /** sets buttons back to original state */
 function refreshButtons() {
   enableButton(hit);
-  enableButton(pass);
+  enableButton(stand);
   disableButton(split);
 }
 
@@ -310,12 +310,9 @@ function getWinner(playerHandValue, dealerHandValue) {
   return winner;
 }
 
-// TODO Make discardTable() that add cards to discard pile, removes cards from hands
 // TODO check if deck has only one card left and reshuffle deck
 // TODO add amount getDeck() so getDeck(amount) can generates mulitple decks
 // TODO draw facedowncard to stack the deck and when card is drawn, remove top element
-// TODO Add visible discardpile
-// TODO make dealStartingHands()
 
 // *======================= GAME STARTS ========================================
 
@@ -324,8 +321,8 @@ let hit = {
   id: "hit",
   active: true,
 };
-let pass = {
-  id: "pass",
+let stand = {
+  id: "stand",
   active: true,
 };
 let split = {
@@ -349,29 +346,14 @@ let dealer = {
   hand: [],
 };
 
-// Deal start hands to player and dealer
-// appendCardToHand(player, deck);
-// appendCardToHand(player, deck);
-// appendCardToHand(dealer, deck);
-// appendCardToHand(dealer, deck, false);
 dealStartHands(deck);
-console.log(player.hand);
-console.log(dealer.hand);
 doOnPlayerBlackJack(player.hand, dealer.hand);
-
-//* what happens when player get blackjack as startinghand
-// if (getHandValue(player.hand) === 21) {
-//   revealDealerHand(dealer.hand);
-//   if (getHandValue(dealer.hand) !== getHandValue(player.hand)) {
-//     revealWinStatus(gameCondition.blackJack);
-//   }
-// }
 
 // *======================= Draw starthands ====================================
 logHandValues();
 
 let hitElement = document.getElementById("hit");
-let passElement = document.getElementById("pass");
+let standElement = document.getElementById("stand");
 let splitElement = document.getElementById("split");
 let closeElement = document.getElementById("close");
 let newHandElement = document.getElementById("new-hand");
@@ -392,10 +374,10 @@ hitElement.addEventListener("click", () => {
 });
 
 // * Response to the PASS button
-passElement.addEventListener("click", () => {
-  if (pass.active) {
+standElement.addEventListener("click", () => {
+  if (stand.active) {
     disableButton(hit);
-    disableButton(pass);
+    disableButton(stand);
     revealDealerHand(dealer.hand);
     logHandValues();
     while (getHandValue(dealer.hand) < 17) {
