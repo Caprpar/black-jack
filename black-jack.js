@@ -52,15 +52,18 @@ function getCard(cardValue, cardSuite, cardIndex) {
 /**
  * Generates a deck with 52 cards
  */
-function getDeck() {
+function getDeck(amount = 1) {
   let suites = ["hearts", "clubs", "spades", "diamonds"];
   let values = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"];
 
   let deck = [];
-  for (const suite of suites) {
-    for (const [cardIndex, value] of values.entries()) {
-      deck.push(getCard(value, suite, cardIndex + 1));
+  while (amount !== 0) {
+    for (const suite of suites) {
+      for (const [cardIndex, value] of values.entries()) {
+        deck.push(getCard(value, suite, cardIndex + 1));
+      }
     }
+    amount--;
   }
   return deck;
 }
@@ -179,6 +182,7 @@ function appendCardToHand(participant, deck, faceUp = true) {
   setCardPositionValues(card, x, y, randomDeg, participant.parentId, faceUp);
   participant.hand.push(card);
   displayCard(card);
+  // FIXME updateDeck(deck);
 }
 
 /** Resets each players hands and remove card elements from document */
@@ -307,10 +311,40 @@ function getWinner(playerHandValue, dealerHandValue) {
   return winner;
 }
 
+function displayDeck(deck, displayAmount = 5) {
+  let deckElement = document.getElementById("deck");
+  let card;
+
+  for (let _ = 0; _ <= displayAmount; _++) {
+    card = document.createElement("div");
+    card.classList.add("deck-card");
+    card.classList.add("card");
+    card.style.top = `${randInt(-85, -75)}px`;
+    card.style.left = `${randInt(0, 15)}px`;
+    card.style.transform = `translate(50%, 50%) rotate(${randInt(-10, -20)}deg)`;
+    deckElement.appendChild(card);
+  }
+}
+
+// FIXME Im supposed to remove top card and put it to the bottom
+/** create card div for each card in deck  */
+function updateDeck(deck) {
+  let deckElement = document.getElementById("deck");
+  let topCard = deckElement.firstChild;
+  console.log(topCard);
+  if (deck.length > 5) {
+    deckElement.append(topCard);
+    deckElement.removeChild(deckElement.firstChild);
+  } else {
+    deckElement.removeChild(deckElement.firstChild);
+  }
+}
+
 // TODO Add Dealer bust, player bust, lost
 // TODO check if deck has only one card left and reshuffle deck
 // TODO add amount getDeck() so getDeck(amount) can generates mulitple decks
 // TODO draw facedowncard to stack the deck and when card is drawn, remove top element
+// TODO if player get blackjack on hit, reveael dealer and compare cards
 
 // *======================= GAME STARTS ========================================
 
@@ -327,7 +361,7 @@ let split = {
   id: "split",
   active: false,
 };
-let deck = shuffleDeck(getDeck());
+let deck = shuffleDeck(getDeck(4));
 let winner = {
   isDraw: false,
   hasBlackjack: false,
@@ -343,7 +377,7 @@ let dealer = {
   parentId: "dealer-card-holder",
   hand: [],
 };
-
+displayDeck(deck);
 dealStartHands(deck);
 doOnPlayerBlackJack(player.hand, dealer.hand);
 

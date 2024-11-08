@@ -279,7 +279,12 @@ body {
   border: none;
 }
 
-#deck-card-1 {
+.deck-card {
+  @include deck-card();
+  @include card-image-setting();
+}
+
+#deck-card-0 {
   @include deck-card();
   @include card-image-setting();
   top: 33%;

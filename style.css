@@ -243,7 +243,13 @@ body {
   border: none;
 }
 
-#deck-card-1 {
+.deck-card {
+  background-image: url("svg_playing_cards/backs/red2.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#deck-card-0 {
   background-image: url("svg_playing_cards/backs/red2.svg");
   background-size: contain;
   background-repeat: no-repeat;
