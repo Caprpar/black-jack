@@ -181,6 +181,18 @@ function appendCardToHand(participant, deck, faceUp = true) {
   displayCard(card);
 }
 
+/** Resets each players hands and remove card elements from document */
+function discardHands(...participants) {
+  for (const participant of participants) {
+    for (const card of participant.hand) {
+      document.getElementById(card.name).remove();
+    }
+    participant.hand = [];
+  }
+  // Remove carddivs from table
+  // Remove cards from hands
+}
+
 /** Go through all hands and draws them out displays them on document
  * @param {...Array} hands - array containng card objects*/
 function displayHands(...hands) {
@@ -343,7 +355,6 @@ let dealer = {
 // appendCardToHand(dealer, deck);
 // appendCardToHand(dealer, deck, false);
 dealStartHands(deck);
-displayHands(player.hand, dealer.hand);
 console.log(player.hand);
 console.log(dealer.hand);
 doOnPlayerBlackJack(player.hand, dealer.hand);
@@ -412,7 +423,10 @@ closeElement.addEventListener("click", () => {
 newHandElement.addEventListener("click", () => {
   document.getElementById("win-status").style.visibility = "hidden";
   console.log("Get new hand");
+  discardHands(player, dealer);
+  dealStartHands(deck);
   refreshButtons();
+  console.log(deck.length);
 });
 // Check if player hits, draw new card then reveal dealers hidden card
 // Check if player passes if so, dealer draws until done
