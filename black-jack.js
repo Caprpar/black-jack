@@ -122,6 +122,8 @@ function logHand(hand) {
 }
 
 // * DOM Functions
+/** Set styling to card div and displays it in document
+ * @param {object} card - Object */
 function displayCard(card) {
   let parent = document.getElementById(card.parent);
   let newCard = document.createElement("div");
@@ -140,12 +142,6 @@ function displayCard(card) {
   newCard.style.transform = `translate(-50%, -50%) rotate(${card.rotation}deg)`;
 
   parent.appendChild(newCard);
-  /*
-    background-image: url("/svg_playing_cards/fronts/clubs_2.svg");
-  top: 52%;
-  left: 45%;
-  transform: translate(-50%, -50%) rotate(3deg);
-   */
 }
 
 /**
@@ -169,9 +165,7 @@ function flipCard(card) {
   displayCard(card);
 }
 
-/**
- * Adds card to player hand and give card positionvalues depending on which number the card is
- */
+/** Adds card to player hand and give card positionvalues depending on which number the card is*/
 function appendCardToHand(participant, deck, faceUp = true) {
   let startY = participant.parentId === "player-card-holder" ? 137 : 153;
   let startX = participant.parentId === "player-card-holder" ? 77 : 164;
@@ -184,13 +178,34 @@ function appendCardToHand(participant, deck, faceUp = true) {
   let randomDeg = randInt(-3, 3);
   setCardPositionValues(card, x, y, randomDeg, participant.parentId, faceUp);
   participant.hand.push(card);
-  displayHands(player.hand, dealer.hand);
+  displayCard(card);
 }
 
+/** Go through all hands and draws them out displays them on document
+ * @param {...Array} hands - array containng card objects*/
 function displayHands(...hands) {
   for (const hand of hands) {
     for (const card of hand) {
       displayCard(card);
+    }
+  }
+}
+
+/** Deals two card each from deck, one of dealers facing down
+ * @param {Array} deck - array of cards
+ */
+function dealStartHands(deck) {
+  appendCardToHand(player, deck);
+  appendCardToHand(player, deck);
+  appendCardToHand(dealer, deck);
+  appendCardToHand(dealer, deck, false);
+}
+
+function doOnPlayerBlackJack(playerHand, dealerHand) {
+  if (getHandValue(playerHand) === 21) {
+    revealDealerHand(dealerHand);
+    if (getHandValue(dealerHand) !== getHandValue(playerHand)) {
+      revealWinStatus(playerHand, dealerHand);
     }
   }
 }
@@ -228,7 +243,8 @@ function refreshButtons() {
 }
 
 /**Gets winner object and decide what to display in win-status*/
-function revealWinStatus(winner, reveal = true) {
+function revealWinStatus(playerHand, dealerHand, reveal = true) {
+  let winner = getWinner(playerHand, dealerHand);
   const gameState = {
     win: "You won!",
     lost: "You lost..",
@@ -260,7 +276,9 @@ function logHandValues() {
 }
 
 // TODO Add Dealer bust, player bust, lost
-/* Compares playerhand with dealerhand and return  */
+/** Compares playerhand with dealerhand and return winner object
+ * @returns winner object => {isDraw: false, participant: "player", hasBlackJack: false}
+ */
 function getWinner(playerHandValue, dealerHandValue) {
   const winner = { participant: "", hasBlackjack: false, isDraw: false };
   if (playerHandValue > 21) {
@@ -280,6 +298,13 @@ function getWinner(playerHandValue, dealerHandValue) {
   return winner;
 }
 
+// TODO Make discardTable() that add cards to discard pile, removes cards from hands
+// TODO check if deck has only one card left and reshuffle deck
+// TODO add amount getDeck() so getDeck(amount) can generates mulitple decks
+// TODO draw facedowncard to stack the deck and when card is drawn, remove top element
+// TODO Add visible discardpile
+// TODO make dealStartingHands()
+
 // *======================= GAME STARTS ========================================
 
 //* Buttons
@@ -296,6 +321,11 @@ let split = {
   active: false,
 };
 let deck = shuffleDeck(getDeck());
+let winner = {
+  isDraw: false,
+  hasBlackjack: false,
+  participant: "",
+};
 
 // * Deals two card each to player and dealer
 let player = {
@@ -306,21 +336,25 @@ let dealer = {
   parentId: "dealer-card-holder",
   hand: [],
 };
-let winner = {};
 
 // Deal start hands to player and dealer
-appendCardToHand(player, deck);
-appendCardToHand(player, deck);
-appendCardToHand(dealer, deck);
-appendCardToHand(dealer, deck, false);
+// appendCardToHand(player, deck);
+// appendCardToHand(player, deck);
+// appendCardToHand(dealer, deck);
+// appendCardToHand(dealer, deck, false);
+dealStartHands(deck);
+displayHands(player.hand, dealer.hand);
+console.log(player.hand);
+console.log(dealer.hand);
+doOnPlayerBlackJack(player.hand, dealer.hand);
 
 //* what happens when player get blackjack as startinghand
-if (getHandValue(player.hand) === 21) {
-  revealDealerHand(dealer.hand);
-  if (getHandValue(dealer.hand) !== getHandValue(player.hand)) {
-    revealWinStatus(gameCondition.blackJack);
-  }
-}
+// if (getHandValue(player.hand) === 21) {
+//   revealDealerHand(dealer.hand);
+//   if (getHandValue(dealer.hand) !== getHandValue(player.hand)) {
+//     revealWinStatus(gameCondition.blackJack);
+//   }
+// }
 
 // *======================= Draw starthands ====================================
 logHandValues();
@@ -331,7 +365,6 @@ let splitElement = document.getElementById("split");
 let closeElement = document.getElementById("close");
 let newHandElement = document.getElementById("new-hand");
 
-// TODO FIXA LOGIKEN OCH VILKOR OM SPELAREN VINNER
 // * Response to the HIT button
 hitElement.addEventListener("click", () => {
   if (hit.active) {
@@ -339,13 +372,12 @@ hitElement.addEventListener("click", () => {
     displayHands(player.hand, dealer.hand);
     logHandValues();
 
-    if (getHandValue(player.hand) > 21) {
+    if (getHandValue(player.hand) >= 21) {
       winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
-      revealWinStatus(winner);
-    } else if (getHandValue(player.hand) === 21) {
-      revealWinStatus(gameCondition.blackJack);
+      revealWinStatus(player.hand, dealer.hand);
     }
   }
+  logHandValues();
 });
 
 // * Response to the PASS button
@@ -355,12 +387,11 @@ passElement.addEventListener("click", () => {
     disableButton(pass);
     revealDealerHand(dealer.hand);
     logHandValues();
-    // TODO METHOD THAT DRAWS CARD WHILE HANDVALUE < 17
     while (getHandValue(dealer.hand) < 17) {
       appendCardToHand(dealer, deck);
     }
     winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
-    revealWinStatus(winner);
+    revealWinStatus(player.hand, dealer.hand);
     console.log(winner);
   }
 });
