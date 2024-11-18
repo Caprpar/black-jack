@@ -59,15 +59,18 @@ body {
   position: fixed;
   align-self: center;
   justify-self: center;
-  background-color: #61a967;
   height: 13em;
   width: 36em;
   border-radius: 42px;
-  border: double 30px #317d37;
+  border: double 17px #317d37;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 #win-status p {
   font-size: 4.8em;
@@ -85,7 +88,8 @@ body {
   background-color: rgba(1, 1, 1, 0);
   padding: 0 1em;
   box-shadow: none;
-  border: dashed #317d37 4.6px;
+  border: #317d37 4.6px;
+  background-color: rgba(49, 125, 55, 0.8);
 }
 
 #empty-2 {
@@ -138,7 +142,35 @@ body {
   border-style: none double;
 }
 
+#bet-window {
+  visibility: collapse;
+  visibility: visible;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  align-content: space-around;
+  height: 100%;
+  background-color: #61a967;
+  width: 100%;
+}
+#bet-window button:active {
+  background-color: #317d37;
+}
+#bet-window button:hover {
+  border: none;
+}
+#bet-window button {
+  background: #4d8c50;
+  border: solid #28652e;
+  border-radius: 1em;
+  box-shadow: none;
+  width: 2em;
+  height: 2em;
+}
+
 #player-main {
+  visibility: collapse;
+  visibility: visible;
   display: grid;
   grid-template-areas: "card-holder balance" "card-holder buttons";
   grid-template-columns: 16em;

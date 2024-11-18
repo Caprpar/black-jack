@@ -109,15 +109,22 @@ body {
   position: fixed;
   align-self: center;
   justify-self: center;
-  background-color: #61a967;
+  // background-color: #61a967;
   height: 13em;
   width: 36em;
   border-radius: 42px;
-  border: double 30px #317d37;
+  border: double 17px #317d37;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  // border-radius: 10px;
+  // border: 1px solid rgba(255, 255, 255, 0.18);
+
   p {
     font-size: 4.8em;
     margin: 0;
@@ -134,7 +141,8 @@ body {
     background-color: rgba(1, 1, 1, 0);
     padding: 0 1em;
     box-shadow: none;
-    border: dashed #317d37 4.6px;
+    border: #317d37 4.6px;
+    background-color: #317d37cc;
   }
 }
 
@@ -187,7 +195,36 @@ body {
   }
 }
 
+#bet-window {
+  visibility: collapse;
+  visibility: visible;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  align-content: space-around;
+
+  height: 100%;
+  background-color: $primary400;
+  width: 100%;
+  button:active {
+    background-color: $primary600;
+  }
+  button:hover {
+    border: none;
+  }
+  button {
+    background: $primary500;
+    border: solid $primary700;
+    border-radius: 1em;
+    box-shadow: none;
+    width: 2em;
+    height: 2em;
+  }
+}
+
 #player-main {
+  visibility: collapse;
+  visibility: visible;
   display: grid;
   grid-template-areas:
     "card-holder balance"

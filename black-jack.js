@@ -340,6 +340,10 @@ function updateDeck(deck) {
   }
 }
 
+function reshuffle(deck, deckAmount) {
+  return shuffleDeck(getDeck(deckAmount));
+}
+
 // TODO Add Dealer bust, player bust, lost
 // TODO check if deck has only one card left and reshuffle deck
 // TODO add amount getDeck() so getDeck(amount) can generates mulitple decks
@@ -347,6 +351,19 @@ function updateDeck(deck) {
 // TODO if player get blackjack on hit, reveael dealer and compare cards
 
 // *======================= GAME STARTS ========================================
+
+let deckAmount = 1;
+let betAmoumtElement = document.querySelector("#bet-amount");
+let balanceAmoumtElement = document.querySelector("#balance-amount");
+
+let subtractElement = document.querySelector("#subtract");
+let addElement = document.querySelector("#add");
+
+let hitElement = document.querySelector("#hit");
+let standElement = document.querySelector("#stand");
+let splitElement = document.querySelector("#split");
+let closeElement = document.querySelector("#close");
+let newHandElement = document.querySelector("#new-hand");
 
 //* Buttons
 let hit = {
@@ -361,7 +378,7 @@ let split = {
   id: "split",
   active: false,
 };
-let deck = shuffleDeck(getDeck(4));
+let deck = shuffleDeck(getDeck(deckAmount));
 let winner = {
   isDraw: false,
   hasBlackjack: false,
@@ -378,24 +395,19 @@ let dealer = {
   hand: [],
 };
 displayDeck(deck);
-dealStartHands(deck);
+// dealStartHands(deck);
 doOnPlayerBlackJack(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
 logHandValues();
 
-let hitElement = document.getElementById("hit");
-let standElement = document.getElementById("stand");
-let splitElement = document.getElementById("split");
-let closeElement = document.getElementById("close");
-let newHandElement = document.getElementById("new-hand");
-
 // * Response to the HIT button
 hitElement.addEventListener("click", () => {
+  // If deck getting low, reshuffle
+  deck = deck.length <= 6 ? reshuffle(deck, deckAmount) : deck;
   if (hit.active) {
     appendCardToHand(player, deck);
     logHandValues();
-
     if (getHandValue(player.hand) >= 21) {
       disableButton(hit);
       disableButton(stand);
@@ -407,6 +419,8 @@ hitElement.addEventListener("click", () => {
 });
 
 // * Response to the STAND button
+// If deck getting low, reshuffle
+deck = deck.length <= 6 ? reshuffle(deck, deckAmount) : deck;
 standElement.addEventListener("click", () => {
   if (stand.active) {
     disableButton(hit);
@@ -444,3 +458,6 @@ newHandElement.addEventListener("click", () => {
   refreshButtons();
   console.log(deck.length);
 });
+
+addElement.addEventListener("click", (event) => {});
+subtractElement.addEventListener("click", (event) => {});
