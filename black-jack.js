@@ -344,6 +344,40 @@ function reshuffle(deck, deckAmount) {
   return shuffleDeck(getDeck(deckAmount));
 }
 
+function addBetAmount(amountToAdd, betAmount, element) {
+  betAmount += amountToAdd;
+  element.textContent = `$${betAmount}`;
+  return betAmount;
+}
+
+function subtractBetAmount(amountToAdd, betAmount, element) {
+  betAmount -= amountToAdd;
+  element.textContent = `$${betAmount}`;
+  return betAmount;
+}
+
+function setBalance(amount, element) {
+  element.textContent = `$${amount}`;
+  return amount;
+}
+function setBet(amount, element) {
+  element.textContent = `$${amount}`;
+  return amount;
+}
+/**
+ * @param {boolean} bool => true, false
+ * @param {Array} buttons => ["hit", "stand", "split"]
+ */
+function showButtons(bool, buttons) {
+  for (let button of buttons) {
+    let currentButton = document.querySelector(`#${button}`);
+    console.log(currentButton);
+    currentButton.style.visibility = bool ? "visible" : "collapse";
+  }
+}
+
+function getHandButtonVisible(bool) {}
+
 // TODO Add Dealer bust, player bust, lost
 // TODO check if deck has only one card left and reshuffle deck
 // TODO add amount getDeck() so getDeck(amount) can generates mulitple decks
@@ -353,17 +387,26 @@ function reshuffle(deck, deckAmount) {
 // *======================= GAME STARTS ========================================
 
 let deckAmount = 1;
+let betAmount = 0;
+let balance = 100;
+let betStep = 10;
 let betAmoumtElement = document.querySelector("#bet-amount");
 let balanceAmoumtElement = document.querySelector("#balance-amount");
+balanceAmoumtElement.textContent;
 
 let subtractElement = document.querySelector("#subtract");
 let addElement = document.querySelector("#add");
+
+let getHandElement = document.querySelector("#get-hand");
 
 let hitElement = document.querySelector("#hit");
 let standElement = document.querySelector("#stand");
 let splitElement = document.querySelector("#split");
 let closeElement = document.querySelector("#close");
 let newHandElement = document.querySelector("#new-hand");
+
+setBalance(balance, balanceAmoumtElement);
+setBet(betAmount, betAmoumtElement);
 
 //* Buttons
 let hit = {
@@ -378,6 +421,7 @@ let split = {
   id: "split",
   active: false,
 };
+
 let deck = shuffleDeck(getDeck(deckAmount));
 let winner = {
   isDraw: false,
@@ -394,6 +438,7 @@ let dealer = {
   parentId: "dealer-card-holder",
   hand: [],
 };
+showButtons(false, ["hit", "stand", "split"]);
 displayDeck(deck);
 // dealStartHands(deck);
 doOnPlayerBlackJack(player.hand, dealer.hand);
@@ -459,5 +504,19 @@ newHandElement.addEventListener("click", () => {
   console.log(deck.length);
 });
 
-addElement.addEventListener("click", (event) => {});
-subtractElement.addEventListener("click", (event) => {});
+// * Add to bet
+addElement.addEventListener("click", (event) => {
+  if (balance > 0) {
+    betAmount = addBetAmount(betStep, betAmount, betAmoumtElement);
+    balance = setBalance(balance - betStep, balanceAmoumtElement);
+  }
+});
+
+// * Subtract to bet
+subtractElement.addEventListener("click", (event) => {
+  console.log("subtract");
+  if (betAmount > 0) {
+    betAmount = subtractBetAmount(betStep, betAmount, betAmoumtElement);
+    balance = setBalance(balance + betStep, balanceAmoumtElement);
+  }
+});

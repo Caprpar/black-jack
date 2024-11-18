@@ -226,6 +226,7 @@ body {
   visibility: collapse;
   visibility: visible;
   display: grid;
+  gap: 10px;
   grid-template-areas:
     "card-holder balance"
     "card-holder buttons";
@@ -270,6 +271,8 @@ body {
     }
   }
   #buttons {
+    visibility: collapse;
+    visibility: visible;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -277,9 +280,12 @@ body {
     justify-content: space-evenly;
     height: 100%;
     button {
-      padding: 0;
-      width: 5em;
+      width: auto;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+      text-align: center;
       height: 1.9em;
+      white-space: nowrap;
       background-color: $primary600;
       color: $primary200;
       box-shadow: -1px -1px 4px 0px #45994c, 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
