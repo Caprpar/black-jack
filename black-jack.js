@@ -368,7 +368,7 @@ function setBet(amount, element) {
  * @param {boolean} bool => true, false
  * @param {Array} buttons => ["hit", "stand", "split"]
  */
-function showButtons(bool, buttons) {
+function isButtonsVisible(bool, buttons) {
   for (let button of buttons) {
     let currentButton = document.querySelector(`#${button}`);
     console.log(currentButton);
@@ -376,7 +376,22 @@ function showButtons(bool, buttons) {
   }
 }
 
-function getHandButtonVisible(bool) {}
+function hideBetWindow(element) {
+  element.style.visibility = "collapse";
+}
+function showBetWindow(element) {
+  element.style.visibility = "visible";
+}
+
+function distributeWin(winner) {
+  if (winner.participant === "player") {
+    balance += winner.hasBlackjack ? betAmount * 2 * 1.5 : betAmount * 2;
+    setBalance(balance, balanceAmoumtElement);
+  } else {
+    balance -= betAmount;
+    setBalance(balance, balanceAmoumtElement);
+  }
+}
 
 // TODO Add Dealer bust, player bust, lost
 // TODO check if deck has only one card left and reshuffle deck
@@ -392,7 +407,9 @@ let balance = 100;
 let betStep = 10;
 let betAmoumtElement = document.querySelector("#bet-amount");
 let balanceAmoumtElement = document.querySelector("#balance-amount");
-balanceAmoumtElement.textContent;
+
+let betWindowElement = document.querySelector("#bet-window");
+console.log(betWindowElement);
 
 let subtractElement = document.querySelector("#subtract");
 let addElement = document.querySelector("#add");
@@ -403,7 +420,7 @@ let hitElement = document.querySelector("#hit");
 let standElement = document.querySelector("#stand");
 let splitElement = document.querySelector("#split");
 let closeElement = document.querySelector("#close");
-let newHandElement = document.querySelector("#new-hand");
+let newBetElement = document.querySelector("#new-bet");
 
 setBalance(balance, balanceAmoumtElement);
 setBet(betAmount, betAmoumtElement);
@@ -438,13 +455,19 @@ let dealer = {
   parentId: "dealer-card-holder",
   hand: [],
 };
-showButtons(false, ["hit", "stand", "split"]);
+isButtonsVisible(false, ["hit", "stand", "split"]);
 displayDeck(deck);
-// dealStartHands(deck);
 doOnPlayerBlackJack(player.hand, dealer.hand);
 
 // *======================= Draw starthands ====================================
 logHandValues();
+
+getHandElement.addEventListener("click", () => {
+  dealStartHands(deck);
+  hideBetWindow(betWindowElement);
+  isButtonsVisible(true, ["hit", "stand", "split"]);
+  isButtonsVisible(false, ["get-hand"]);
+});
 
 // * Response to the HIT button
 hitElement.addEventListener("click", () => {
@@ -457,6 +480,7 @@ hitElement.addEventListener("click", () => {
       disableButton(hit);
       disableButton(stand);
       winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
+      distributeWin(winner);
       revealWinStatus(player.hand, dealer.hand);
     }
   }
@@ -476,6 +500,7 @@ standElement.addEventListener("click", () => {
       appendCardToHand(dealer, deck);
     }
     winner = getWinner(getHandValue(player.hand), getHandValue(dealer.hand));
+    distributeWin(winner);
     logHandValues();
     revealWinStatus(player.hand, dealer.hand);
     console.log(winner);
@@ -494,12 +519,16 @@ closeElement.addEventListener("click", () => {
   document.getElementById("win-status").style.visibility = "hidden";
 });
 
-// * Response to the GET NEW HAND button
-newHandElement.addEventListener("click", () => {
+// * Response to the GET NEW BET button
+newBetElement.addEventListener("click", () => {
+  betAmount = setBet(0, betAmoumtElement);
   document.getElementById("win-status").style.visibility = "hidden";
   console.log("Get new hand");
   discardHands(player, dealer);
-  dealStartHands(deck);
+  isButtonsVisible(true, ["get-hand"]);
+  isButtonsVisible(false, ["hit", "stand", "split"]);
+  showBetWindow(betWindowElement);
+  console.log(betAmoumtElement);
   refreshButtons();
   console.log(deck.length);
 });
