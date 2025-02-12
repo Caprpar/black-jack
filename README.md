@@ -1,2 +1,5 @@
 # black-jack
-My take on the blackjackgame using Javascript, HTML &amp; CSS
+My take on the blackjackgame using Javascript, HTML &amp; CSS.
+
+New and improved!
+
